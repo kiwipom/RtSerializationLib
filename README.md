@@ -1,4 +1,11 @@
-RtMapper
+#RtSerializationLib
 ========
 
-Object to object mapper for WinRT
+Serialization library to help read/write to the Storage area in Windows 8
+
+###Note:
+
+- Serialization can be injected as required (JSON only option today)
+- Encryption can be injected as required
+- API is manky (TM) and will change soon
+
