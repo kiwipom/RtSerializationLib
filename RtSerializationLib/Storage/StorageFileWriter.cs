@@ -27,17 +27,36 @@ namespace RtSerializationLib.Storage
             await WriteToDiskAsync(buffer, filename);
         }
 
-
-
         private async Task WriteToDiskAsync(IBuffer buffer, string filename)
         {
             var storage = await ApplicationData.Current.LocalFolder
                 .CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
 
-            using (var stream = await storage.OpenTransactedWriteAsync())
+            bool success = false;
+            int retryCount = 0;
+            while (!success && retryCount < 3)
             {
-                await stream.Stream.WriteAsync(buffer);
-                await stream.CommitAsync();
+                try
+                {
+                    using (var stream = await storage.OpenTransactedWriteAsync())
+                    {
+                        await stream.Stream.WriteAsync(buffer);
+                        await stream.Stream.FlushAsync();
+                        await stream.CommitAsync();
+
+                        success = true;
+                    }
+                }
+                catch
+                {
+                    retryCount++;
+                    if (retryCount == 3)
+                        throw;
+                }
+                if (!success)
+                {
+                    await Task.Delay(50);
+                }
             }
         }
     }
