@@ -32,9 +32,13 @@ namespace RtSerializationLib.Storage
         /// <param name="fileNotFoundAction">Optional action to perform if specified file is not found</param>
         /// <returns>Buffer containing the encrypted data</returns>
         public async Task<T> LoadDataAsync<T>(string filename, Action<FileNotFoundException> fileNotFoundAction = null)
+            where T : class
         {
             // grab file from filename
             var buffer = await LoadBufferAsync(filename, fileNotFoundAction);
+
+            if (buffer == null || buffer.Length == 0)
+                return null;
 
             // turn file into string (including encryption if necessary)
             var serializedString = await _encryptionService.CreateStringFromBuffer(buffer);
@@ -49,12 +53,16 @@ namespace RtSerializationLib.Storage
             {
                 var storageFile = await ApplicationData.Current.LocalFolder.GetFileAsync(filename);
 
-                var bytes = new byte[_bufferSize];
-                var buffer = bytes.AsBuffer();
-
                 using (var stream = await storageFile.OpenReadAsync())
                 {
-                    return await stream.ReadAsync(buffer, _bufferSize - 1, InputStreamOptions.None);
+                    using (var readStream = stream.GetInputStreamAt(0))
+                    {
+                        var reader = new DataReader(readStream);
+                        uint fileLength = await reader.LoadAsync((uint)stream.Size);
+                        var stringContent = reader.ReadString(fileLength);
+
+                        return System.Text.Encoding.UTF8.GetBytes(stringContent).AsBuffer();
+                    }
                 }
             }
             catch (FileNotFoundException exception)
