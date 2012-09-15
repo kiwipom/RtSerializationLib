@@ -1,0 +1,37 @@
+# images
+*.bmp binary
+*.gif binary
+*.jpg binary
+*.png binary
+
+*.ascx text
+*.cmd text
+*.coffee text
+*.config text
+*.cs text diff=csharp 
+*.csproj text merge=union 
+*.css text
+*.cshtml text
+*.htm text
+*.html text
+*.js text
+*.msbuild text
+*.resx text merge=union
+*.ruleset text
+*.Stylecop text
+*.targets text
+*.tt text
+*.txt text
+*.vb text
+*.vbhtml text
+*.vbproj text merge=union 
+*.xml text
+*.xunit text
+
+*.sln text eol=crlf merge=union 
+
+# WinRT file extensions
+*.xaml text
+*.pfx binary
+*.appxmanifest text merge=union 
+
