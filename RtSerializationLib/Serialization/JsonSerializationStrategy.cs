@@ -13,7 +13,9 @@ namespace RtSerializationLib.Serialization
 
         public string Serialize<T>(T obj)
         {
-            return JsonConvert.SerializeObject(obj);
+            return JsonConvert.SerializeObject(obj, Formatting.None,
+                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
+                );
         }
     }
 }
