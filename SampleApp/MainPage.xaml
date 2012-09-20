@@ -9,6 +9,88 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock
+                Grid.Column="1"
+                Margin="0,0,0,42"
+                Style="{StaticResource HeaderTextStyle}"
+                Text="Serialize all the things" VerticalAlignment="Bottom" />
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="120,0,0,0">
+            <Grid.Resources>
+                <Style x:Key="labelStyle" TargetType="TextBlock" BasedOn="{StaticResource SubheaderTextStyle}">
+                </Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="FontSize" Value="26.667" />
+                    <Setter Property="Margin" Value="0,4" />
+                    <Setter Property="Height" Value="60" />
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60" />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="80" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="240" />
+                <ColumnDefinition Width="360" />
+                <ColumnDefinition Width="240" />
+                <ColumnDefinition Width="360" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Row="0" Style="{StaticResource labelStyle}" Text="Name" />
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Customer.Name}" />
+            <TextBlock Grid.Row="1" Style="{StaticResource labelStyle}" Text="Phone Number" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Customer.PhoneNumber}" />
+            <TextBlock Grid.Row="2" Style="{StaticResource labelStyle}" Text="Postal Address" />
+            <StackPanel Grid.Row="2" Grid.Column="1">
+                <TextBox Text="{Binding Customer.PostalAddress.Number}" />
+                <TextBox Text="{Binding Customer.PostalAddress.Street}" />
+                <TextBox Text="{Binding Customer.PostalAddress.Suburb}" />
+                <TextBox Text="{Binding Customer.PostalAddress.City}" />
+                <TextBox Text="{Binding Customer.PostalAddress.PostCode}" />
+                <TextBox Text="{Binding Customer.PostalAddress.Country}" />
+            </StackPanel>
+            <TextBlock Grid.Row="2" Grid.Column="2" Margin="20,0,0,0" Style="{StaticResource labelStyle}" Text="Physical Address" />
+            <StackPanel Grid.Row="2" Grid.Column="3">
+                <TextBox Text="{Binding Customer.PhysicalAddress.Number}" />
+                <TextBox Text="{Binding Customer.PhysicalAddress.Street}" />
+                <TextBox Text="{Binding Customer.PhysicalAddress.Suburb}" />
+                <TextBox Text="{Binding Customer.PhysicalAddress.City}" />
+                <TextBox Text="{Binding Customer.PhysicalAddress.PostCode}" />
+                <TextBox Text="{Binding Customer.PhysicalAddress.Country}" />
+            </StackPanel>
+            <ToggleSwitch Grid.Row="3" IsOn="{Binding IsEncrypted}">Use Encryption</ToggleSwitch>
+        </Grid>
+        
 
     </Grid>
+    <Page.BottomAppBar>
+        <AppBar>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button
+                    Style="{StaticResource DownloadAppBarButtonStyle}"
+                    AutomationProperties.Name="Load" 
+                    Command="{Binding LoadCommand}" />
+                <Button 
+                    Style="{StaticResource SaveAppBarButtonStyle}"
+                    Command="{Binding SaveCommand}" />
+            </StackPanel>
+        </AppBar>
+    </Page.BottomAppBar>
 </Page>

@@ -102,6 +102,13 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <ProjectReference Include="..\RtSerializationLib\RtSerializationLib.csproj">
+      <Project>{d659f80b-4eb5-48ec-918c-81207e95200f}</Project>
+      <Name>RtSerializationLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -142,20 +149,18 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="metroioc, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\metroioc.2.0.2.0\lib\winrt45\metroioc.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight.Extras.Win8">
+      <HintPath>..\packages\MvvmLight.4.1.23.0\lib\winrt45\GalaSoft.MvvmLight.Extras.Win8.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.9\lib\winrt45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight.Win8">
+      <HintPath>..\packages\MvvmLight.4.1.23.0\lib\winrt45\GalaSoft.MvvmLight.Win8.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RtSerializationLib\RtSerializationLib.csproj">
-      <Project>{d659f80b-4eb5-48ec-918c-81207e95200f}</Project>
-      <Name>RtSerializationLib</Name>
-    </ProjectReference>
+    <Reference Include="metroioc">
+      <HintPath>..\packages\metroioc.2.0.1\lib\winrt45\metroioc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\packages\MvvmLight.4.1.23.0\lib\winrt45\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

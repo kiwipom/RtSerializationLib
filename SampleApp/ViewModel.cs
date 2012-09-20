@@ -1,3 +1,5 @@
+using System.Windows.Input;
+using GalaSoft.MvvmLight.Command;
 using RtSerializationLib.Encryption;
 using RtSerializationLib.Serialization;
 using RtSerializationLib.Storage;
@@ -7,11 +9,50 @@ namespace SampleApp
 {
     public class ViewModel
     {
-        public ViewModel()
+        private readonly ISerializer _serializer;
+        private readonly ICommand _loadCommand;
+        private readonly ICommand _saveCommand;
+        private readonly IEncryptionService _unencryptedService;
+        private readonly IEncryptionService _encryptedService;
+        private bool _isEncrypted;
+
+        public ViewModel(ISerializer serializer)
         {
-            //CreateCustomer();
-            LoadCustomer();
+            _serializer = serializer;
+            _unencryptedService = new UnencryptedService();
+            _encryptedService = new UnencryptedService();
+
+            _loadCommand = new RelayCommand(LoadAction);
+            _saveCommand = new RelayCommand(SaveAction);
+
+            CreateCustomer();
         }
+
+        private IEncryptionService EncryptionService
+        {
+            get { return _isEncrypted ? _encryptedService : _unencryptedService; }
+        }
+
+
+        public bool IsEncrypted
+        {
+            get { return _isEncrypted; }
+            set { _isEncrypted = value; }
+        }
+
+        private void SaveAction()
+        {
+            var writer = new StorageFileWriter(EncryptionService, _serializer);
+            writer.WriteDataAsync(Customer, "customer.json");
+        }
+
+        private void LoadAction()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ICommand LoadCommand { get { return _loadCommand; } }
+        public ICommand SaveCommand { get { return _saveCommand; } }
 
         private async void LoadCustomer()
         {
@@ -42,11 +83,5 @@ namespace SampleApp
         }
 
         public Customer Customer { get; set; }
-
-        public void SaveDetails()
-        {
-            var writer = new StorageFileWriter(new UnencryptedService(), new JsonSerializer());
-            writer.WriteDataAsync(Customer, "customer.json");
-        }
     }
 }
