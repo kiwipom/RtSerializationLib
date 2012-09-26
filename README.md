@@ -7,5 +7,5 @@ Serialization library to help read/write to the Storage area in Windows 8
 
 - Serialization can be injected as required (JSON only option today)
 - Encryption can be injected as required
-- API is manky (TM) and will change soon
+- API is manky (TM) and will change <strike>soon</strike>one day. Maybe.
 
