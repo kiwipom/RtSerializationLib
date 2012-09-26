@@ -75,11 +75,13 @@
                 <TextBox Text="{Binding Customer.PhysicalAddress.PostCode}" />
                 <TextBox Text="{Binding Customer.PhysicalAddress.Country}" />
             </StackPanel>
-            <ToggleSwitch Grid.Row="3" IsOn="{Binding IsEncrypted}">Use Encryption</ToggleSwitch>
+            <ToggleSwitch Grid.Row="3" IsOn="{Binding IsEncrypted, Mode=TwoWay}">Use Encryption</ToggleSwitch>
         </Grid>
         
 
     </Grid>
+    
+    
     <Page.BottomAppBar>
         <AppBar>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">

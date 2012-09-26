@@ -1,4 +1,6 @@
+using System.IO;
 using System.Windows.Input;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using RtSerializationLib.Encryption;
 using RtSerializationLib.Serialization;
@@ -7,7 +9,7 @@ using SampleApp.Model;
 
 namespace SampleApp
 {
-    public class ViewModel
+    public class ViewModel : ViewModelBase
     {
         private readonly ISerializer _serializer;
         private readonly ICommand _loadCommand;
@@ -15,20 +17,19 @@ namespace SampleApp
         private readonly IEncryptionService _unencryptedService;
         private readonly IEncryptionService _encryptedService;
         private bool _isEncrypted;
+        private Customer _customer;
 
         public ViewModel(ISerializer serializer)
         {
             _serializer = serializer;
             _unencryptedService = new UnencryptedService();
-            _encryptedService = new UnencryptedService();
+            _encryptedService = EncryptionService.Create();
 
             _loadCommand = new RelayCommand(LoadAction);
             _saveCommand = new RelayCommand(SaveAction);
-
-            CreateCustomer();
         }
 
-        private IEncryptionService EncryptionService
+        private IEncryptionService CurrentEncryptionService
         {
             get { return _isEncrypted ? _encryptedService : _unencryptedService; }
         }
@@ -40,48 +41,49 @@ namespace SampleApp
             set { _isEncrypted = value; }
         }
 
-        private void SaveAction()
-        {
-            var writer = new StorageFileWriter(EncryptionService, _serializer);
-            writer.WriteDataAsync(Customer, "customer.json");
-        }
-
-        private void LoadAction()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public ICommand LoadCommand { get { return _loadCommand; } }
         public ICommand SaveCommand { get { return _saveCommand; } }
 
-        private async void LoadCustomer()
+        public Customer Customer
         {
-            var reader = new StorageFileReader(Ioc.Resolve<IEncryptionService>(), Ioc.Resolve<ISerializer>());
-
-            //Customer = await reader.LoadDataAsync<Customer>("customer.json");
-            Customer = await reader.LoadDataAsync<Customer>("customer.json.enc");
-        }
-
-        private void CreateCustomer()
-        {
-            Customer = new Customer
+            get { return _customer; }
+            set
             {
-                Id = 435435,
-                Name = "John Blokey-Guy",
-                PhoneNumber = "09 111-2222",
-                Status = 9,
-                PhysicalAddress = new Address
-                {
-                    Number = "100",
-                    Street = "High Street",
-                    Suburb = "CBD",
-                    City = "Auckland",
-                    PostCode = "1010",
-                    Country = "New Zealand"
-                }
-            };
+                if (value == _customer) return;
+                _customer = value;
+                base.RaisePropertyChanged(() => Customer);
+            }
         }
 
-        public Customer Customer { get; set; }
+        private string Filename
+        {
+            get
+            {
+                var name = "customer.json";
+                if (IsEncrypted)
+                    name += ".enc";
+                return name;
+            }
+        }
+
+        private void SaveAction()
+        {
+            var writer = new StorageFileWriter(CurrentEncryptionService, _serializer);
+            writer.WriteDataAsync(Customer, Filename);
+        }
+
+        private async void LoadAction()
+        {
+            try
+            {
+                var reader = new StorageFileReader(CurrentEncryptionService, _serializer);
+                Customer = await reader.LoadDataAsync<Customer>(Filename);
+            }
+            catch (FileNotFoundException)
+            {
+                // file not found.
+            }
+        }
+
     }
 }

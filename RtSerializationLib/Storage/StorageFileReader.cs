@@ -57,7 +57,7 @@ namespace RtSerializationLib.Storage
                 {
                     using (var readStream = stream.GetInputStreamAt(0))
                     {
-                        var reader = new DataReader(readStream);
+                        var reader = new DataReader(readStream) { UnicodeEncoding = UnicodeEncoding.Utf16LE };
                         uint fileLength = await reader.LoadAsync((uint)stream.Size);
                         var stringContent = reader.ReadString(fileLength);
 
